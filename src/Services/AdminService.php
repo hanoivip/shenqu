@@ -25,7 +25,7 @@ class AdminService
             return $account->first();
         }
         // retry with username
-        $account = User::where('user_name', $uid)
+        $account = User::where('email', $uid)
         ->get();
         if ($account->isNotEmpty())
         {
@@ -36,7 +36,7 @@ class AdminService
     public function getUserInfo($uid)
     {
        $user = $this->getUserByIdOrUsername($uid);
-       return ['id' => $user->id, 'hoten' => $user->udid];
+       return ['id' => $user->id, 'hoten' => $user->email];
     }
     
     public function getUserSecureInfo($uid)
@@ -50,7 +50,7 @@ class AdminService
         $user = $this->getUserByIdOrUsername($uid);
         if (!empty($user))
         {
-            $user->password = self::DEFAULT_PASSWORD;
+            $user->password = md5(md5(self::DEFAULT_PASSWORD));
             $user->save();
             return true;
         }
